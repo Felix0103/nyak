@@ -21,7 +21,8 @@ class AddressComponent extends Component
 
         $countries = Country::orderBy('name')->pluck('name','id');
         $states = State::orderBy('name')->pluck('name','id');
-        $cities = City::select('id', DB::raw("concat(name, ' (', zip, ')') as name"))->where('state_code',$state?->code  )->orderBy('name')->pluck('name','id');
+        $cities = City::select('id', DB::raw("concat(name, ' (', zip, ')') as name"))
+        ->where('state_code',$state?->code  )->orderBy('name')->pluck('name','id');
         return view('livewire.address-component', compact('countries','states','cities'));
     }
 }
