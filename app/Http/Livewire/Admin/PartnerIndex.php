@@ -20,13 +20,13 @@ class PartnerIndex extends Component
     public function render()
     {
 
-        $partners = Partner::where('first_name','like', '%'.$this->search.'%')
-        ->orWhere('last_name','like', '%'.$this->search.'%')
-        ->orWhere('identification','like', '%'.$this->search.'%')
-        ->orderBy($this->sort, $this->direction)
-        ->paginate(10);
+        // $partners = Partner::where('first_name','like', '%'.$this->search.'%')
+        // ->orWhere('last_name','like', '%'.$this->search.'%')
+        // ->orWhere('identification','like', '%'.$this->search.'%')
+        // ->orderBy($this->sort, $this->direction)
+        // ->paginate(10);
 
-        return view('livewire.admin.partner-index', compact('partners'));
+        // return view('livewire.admin.partner-index', compact('partners'));
     }
 
     public function order($sort){

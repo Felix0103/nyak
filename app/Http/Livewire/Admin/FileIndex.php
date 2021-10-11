@@ -1,20 +1,18 @@
 <?php
 
-
-
 namespace App\Http\Livewire\Admin;
 
-use App\Models\Collector;
+use App\Models\Admin\FileHeader;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
 
-
-class CollectorIndex extends Component
+class FileIndex extends Component
 {
     use WithPagination;
     protected $paginationTheme ='bootstrap';
     public $search;
-    public $sort = 'id';
+    public $sort = 'work_date';
     public $direction = 'desc';
 
     public function updatingSearch(){
@@ -23,13 +21,15 @@ class CollectorIndex extends Component
     public function render()
     {
 
-        $collectors = Collector::where('first_name','like', '%'.$this->search.'%')
-        ->orWhere('last_name','like', '%'.$this->search.'%')
-        ->orWhere('identification','like', '%'.$this->search.'%')
+        $fileHeaders = FileHeader::with('file_details')
+        ->leftJoin('drivers', 'file_headers.driver_id', '=', 'drivers.id')
+        ->where('file_headers.file_name','like', '%'.$this->search.'%')
+        ->orWhere('drivers.first_name','like', '%'.$this->search.'%')
+        ->orWhere('drivers.last_name','like', '%'.$this->search.'%')
         ->orderBy($this->sort, $this->direction)
+        ->select('file_headers.*' ,DB::raw("concat(first_name,' ', last_name ) as driver_name"))
         ->paginate(10);
-        return view('livewire.admin.collector-index',compact('collectors'));
-
+        return view('livewire.admin.file-index', compact('fileHeaders'));
     }
 
     public function order($sort){

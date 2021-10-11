@@ -10,11 +10,12 @@ use Illuminate\Http\Request;
 
 class ZipCodeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct()
+    {
+        $this->middleware('can:admin.zipcodes.index')->only('index');
+        $this->middleware('can:admin.zipcodes.edit')->only('edit','update');
+        $this->middleware('can:admin.zipcodes.destroy')->only('destroy');
+    }
     public function index()
     {
         return view('admin.zipcodes.index');
@@ -97,6 +98,6 @@ class ZipCodeController extends Controller
         $zipcode->active = $zipcode->active ==1?0:1;
         $zipcode->update();
 
-         return redirect()->route('admin.zipcodes.index')->with('info', 'This zip code has been '.($zipcode->active ==1? 'activated' : 'desabled').' successfully');
+        return redirect()->route('admin.zipcodes.index')->with('info', 'This zip code has been '.($zipcode->active ==1? 'activated' : 'desabled').' successfully');
     }
 }
