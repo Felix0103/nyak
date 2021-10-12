@@ -70,12 +70,10 @@ class FileController extends Controller
 
             DB::commit();
             DB::unprepared("
-                update file_details set active =2
-                where id in(
-                select a.id
-                from file_details a
+                update file_details a
                 left join file_details b on a.barcode=b.barcode and a.file_header_id<>b.file_header_id and b.active in(1,3)
-                where a.file_header_id={$fileHeader->id} and b.id is not null)
+                set active =2
+                where a.file_header_id={$fileHeader->id} and b.id is not null
             ");
             // Estatus 1--Esta Ok, 2--Esta dos veces la misma entrada, 3--Pago por duplicidad, 4-Porcesado
 

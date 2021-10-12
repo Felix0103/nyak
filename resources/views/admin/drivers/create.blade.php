@@ -27,7 +27,7 @@
         @include('admin.drivers.partials.form')
         @livewire('address-component')
         @livewire('contact-component')
-        {!! Form::submit('Guardar Cliente', ['class' => 'btn btn-primary']) !!}
+        {!! Form::submit('Save Driver', ['class' => 'btn btn-primary']) !!}
     </div>
 
     {!! Form::close() !!}
