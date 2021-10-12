@@ -32,7 +32,7 @@ class FileController extends Controller
         $drivers = Driver::select('id', DB::raw("concat(first_name, ' ', last_name) as name"))
         ->orderBy('name')->pluck('name','id');
         if(!$drivers->count()){
-            return redirect('admin.drivers.create')->with('info', 'Must create a driver before loading a file');
+            return redirect()->route('admin.drivers.create')->with('info', 'Must create a driver before loading a file');
         }
         return view('admin.files.create', compact('drivers'));
     }
