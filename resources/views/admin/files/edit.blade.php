@@ -26,24 +26,26 @@
                     {!! Form::text('file_name', null, ['class' => 'form-control', 'disabled']) !!}
                 </div>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <div class="form-group">
                     {!! Form::label('status', 'File Status') !!}
                     {!! Form::text('status', $file->fileStatus(), ['class' => 'form-control', 'disabled']) !!}
                 </div>
             </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                    {!! Form::label('total_row', 'Total Entries') !!}
+                    {!! Form::text('total_row', $file->file_details->count(), ['class' => 'form-control', 'disabled']) !!}
+                </div>
+            </div>
         </div>
-
-
-
         {!! Form::submit('Update Info', ['class' => 'btn btn-primary']) !!}
     </div>
 
     {!! Form::close() !!}
 
-    @error('barcode')
-    <span class="text-danger">{{ $message }}</span>
-@enderror
+    @livewire('admin.file-details',  ['file' => $file])
+
 @stop
 @section('js')
     <script src="{{ asset('js/bs-custom-file-input.min.js') }}" defer></script>
