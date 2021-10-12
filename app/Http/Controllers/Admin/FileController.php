@@ -72,7 +72,7 @@ class FileController extends Controller
             DB::unprepared("
                 update file_details a
                 left join file_details b on a.barcode=b.barcode and a.file_header_id<>b.file_header_id and b.active in(1,3)
-                set active =2
+                set a.active =2
                 where a.file_header_id={$fileHeader->id} and b.id is not null
             ");
             // Estatus 1--Esta Ok, 2--Esta dos veces la misma entrada, 3--Pago por duplicidad, 4-Porcesado
