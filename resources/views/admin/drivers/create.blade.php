@@ -13,12 +13,13 @@
         </div>
     </div>
 @stop
-@if (session('info'))
-<div class="alert alert-warning">
-    <strong>{{session('info')}}</strong>
-</div>
-@endif
+
 @section('content')
+    @if (session('info'))
+    <div class="alert alert-warning">
+        <strong>{{session('info')}}</strong>
+    </div>
+    @endif
     {!! Form::open(['route' => 'admin.drivers.store', 'class' => 'card']) !!}
 
     <div class="card-body">
