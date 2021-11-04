@@ -16,6 +16,7 @@ class FileDetails extends Component
 
     public $fileId;
     public $address;
+    public $onlywithOutZipCode = false;
     public function mount($file){
 
 
@@ -33,8 +34,10 @@ class FileDetails extends Component
         $fileDetails = FileDetail::where('file_header_id', $this->fileId)
         ->where(function($query) {
             $query->where('address', 'like',  '%'.$this->address.'%')
-                ->orWhereRaw("length('".($this->address??"")."')=?",0);
+                ->orWhereRaw("length('".($this->address??"")."')=?",0)
+                ->orWhere('zip_code','like', '%'.$this->address.'%');
         })
+        ->whereRaw("length(zip_code) ". ($this->onlywithOutZipCode?"=":">=")."?", 0 )
         ->orderBy($this->sort, $this->direction)
         ->paginate(10);
 
@@ -43,7 +46,9 @@ class FileDetails extends Component
 
         return view('livewire.admin.file-details', compact('fileDetails'));
     }
-
+    public function allZipCode(){
+        $this->onlywithOutZipCode = !$this->onlywithOutZipCode;
+    }
     public function order($sort){
 
         if($this->sort == $sort){

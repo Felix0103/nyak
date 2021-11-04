@@ -31,6 +31,7 @@ class FileController extends Controller
     {
         $drivers = Driver::select('id', DB::raw("concat(first_name, ' ', last_name) as name"))
         ->orderBy('name')->pluck('name','id');
+
         if(!$drivers->count()){
             return redirect()->route('admin.drivers.create')->with('info', 'Must create a driver before loading a file');
         }
@@ -75,7 +76,16 @@ class FileController extends Controller
                 set a.active =2
                 where a.file_header_id={$fileHeader->id} and b.id is not null
             ");
-            // Estatus 1--Esta Ok, 2--Esta dos veces la misma entrada, 3--Pago por duplicidad, 4-Porcesado
+            DB::unprepared("
+                update file_details
+                set active =3
+                where file_header_id={$fileHeader->id}
+                and id not in (select min(id) from `file_details`  where file_header_id={$fileHeader->id} and active =1 group by address having count(*) >1 )
+                and address in (select address from `file_details`  where file_header_id={$fileHeader->id} and active =1 group by address having count(*) >1 )
+                and active =1
+
+            ");
+            // Estatus 1--Esta Ok, 2--Esta dos veces la misma entrada, 3--Pago por duplicidad, 4-Procesado
 
             return redirect()->route('admin.files.edit',$fileHeader)->with('info', 'This files has been loaded successfully');
 
@@ -137,6 +147,9 @@ class FileController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $fileheader = FileHeader::findOrFail($id);
+        $fileheader->active =0;
+        $fileheader->update();
+        return $fileheader;
     }
 }

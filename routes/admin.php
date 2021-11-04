@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\FileController;
+use App\Http\Controllers\Admin\FileDetailController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\RoleController;
@@ -18,4 +19,6 @@ Route::resource('drivers', DriverController::class)->names('admin.drivers');
 Route::resource('files', FileController::class)->names('admin.files');
 
 Route::get('report/sales_purchases', [ReportController::class,'salespurchases'])->name('admin.report.sales.purchases');
+Route::get('report/earnings', [ReportController::class,'earnings'])->name('admin.report.sales.earnings');
 
+Route::put('file/update_zip_code/{filedetail}', [FileDetailController::class,'updateZipCode'])->name('admin.file.update.zipcode');

@@ -17,10 +17,10 @@
 @section('content')
     {!! Form::model($file,['route' => ['admin.files.update', $file], 'method'=>'put'],['class' => 'card']) !!}
 
-    <div class="card-body">
+    <div class="card-body small">
         @include('admin.files.partials.form')
         <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-3">
                 <div class="form-group">
                     {!! Form::label('file_name', 'File Name') !!}
                     {!! Form::text('file_name', null, ['class' => 'form-control', 'disabled']) !!}
@@ -38,8 +38,14 @@
                     {!! Form::text('total_row', $file->file_details->count(), ['class' => 'form-control', 'disabled']) !!}
                 </div>
             </div>
+            <div class="col-sm-3">
+                <div class="form-group">
+                   <label style="color:white;">a</label>
+
+                    {!! Form::submit('Update Info', ['class' => 'btn btn-primary form-control']) !!}
+                </div>
+            </div>
         </div>
-        {!! Form::submit('Update Info', ['class' => 'btn btn-primary']) !!}
     </div>
 
     {!! Form::close() !!}
@@ -54,4 +60,7 @@
           bsCustomFileInput.init();
         });
         </script>
+
+
+
 @stop

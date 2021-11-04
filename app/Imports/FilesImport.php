@@ -35,7 +35,7 @@ class FilesImport implements ToModel, WithHeadingRow, WithValidation, WithBatchI
             'seq_no' => $row['seq_no'],
             'name' => $name_splitted['name'],
             'address' => $name_splitted['address'],
-            'zip_code' => $name_splitted['zipCode'],
+            'zip_code' => ( isset($row['zipcode']) && strlen($row['zipcode'])>0?$row['zipcode']:$name_splitted['zipCode']),
             'active' => 1
         ]);
     }

@@ -4,6 +4,7 @@
             <input wire:model="search" type="text"  class="form-control" placeholder='type some driver/file name' />
         </div>
         @if ($fileHeaders->count())
+        @csrf
              <div class="card-body">
                  <table class="table table-striped">
                      <thead>
@@ -39,21 +40,26 @@
                      <tbody>
                          @foreach ($fileHeaders as $file)
 
-                             <tr>
+                             <tr id="file_{{$file->id}}">
                                  <td >{{ \Carbon\Carbon::parse($file->work_date)->format('d/M/Y')}}</td>
                                  <td >{{$file->driver_name}}</td>
                                  <td >{{$file->file_name}}</td>
                                  <td >{{$file->fileStatus()}}</td>
                                  <td width="10px">
-                                     @can('admin.files.edit')
-                                         <a class="btn btn-primary btn-sm" href="{{route('admin.files.edit', $file->id)}}">Edit</a>
-                                     @endcan
+                                     @if ($file->fileStatus()=="duplicate file")
+                                         <div><h6 class="badge badge-danger">Duplicate</h6></div>
+                                    @elseif ($file->fileStatus()=="no deliveries")
+                                        <div><h6 class="badge badge-warning">No Deliveries</h6></div>
+                                     @else
+                                        @can('admin.files.edit')
+                                            <a class="btn btn-primary btn-sm" href="{{route('admin.files.edit', $file->id)}}">Edit</a>
+                                        @endcan
+                                     @endif
+
                                  </td>
                                  <td width="10px">
                                     @can('admin.files.destroy')
-                                        {!! Form::open(['route'=>['admin.files.destroy', $file->id], 'method'=>'delete']) !!}
-                                            {!! Form::submit( ($file->active==1?'Cancel':'Active'), ['class'=> "btn btn-".($file->active==0?'success':'danger')." btn-sm"] ) !!}
-                                        {!! Form::close() !!}
+                                        <button onclick="delete_file({{$file->id}})" class="btn btn-{{($file->active==0?'success':'danger')}} btn-sm">{{($file->active==1?'Cancel':'Active')}}</button>
                                     @endcan
                                 </td>
                              </tr>
@@ -72,3 +78,50 @@
     </div>
 
  </div>
+ @section('js')
+
+
+ <script  language="javascript">
+
+     function delete_file(file_id){
+
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+
+
+            fetch('/admin/files/'+file_id, {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: '{"_token": "'+$('[name="_token"]').val()+'"}'
+            })
+            .then(response => {
+
+                $('#file_'+file_id).hide();
+                Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+                )
+                // return response.json( )
+            })
+
+
+
+
+        }
+        })
+     }
+ </script>
+
+
+  @stop

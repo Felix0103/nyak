@@ -45,6 +45,9 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.files.edit','description' =>'Edit files' ])->syncRoles([$admin]);
         Permission::create(['name' => 'admin.files.destroy','description' =>'Delete files' ])->syncRoles([$admin]);
 
+        //Reports
+        Permission::create(['name' => 'admin.report.sales.purchases','description' =>'See sales and purchase report' ])->syncRoles([$admin]);
+        Permission::create(['name' => 'admin.report.sales.earnings','description' =>'See earnings report' ])->syncRoles([$admin]);
 
     }
 }

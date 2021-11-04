@@ -83,10 +83,10 @@ return [
     |
     */
 
-    'layout_topnav' => null,
-    'layout_boxed' => null,
+    'layout_topnav' => false,
+    'layout_boxed' => false,
     'layout_fixed_sidebar' => null,
-    'layout_fixed_navbar' => null,
+    'layout_fixed_navbar' => false,
     'layout_fixed_footer' => null,
 
     /*
@@ -146,8 +146,8 @@ return [
 
     'sidebar_mini' => true,
     'sidebar_collapse' => false,
-    'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_auto_size' => true,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
     'sidebar_scrollbar_theme' => 'os-theme-light',
     'sidebar_scrollbar_auto_hide' => 'l',
@@ -252,17 +252,17 @@ return [
             'submenu' => [
                 [
                     'text'        => 'Sales and Purchases',
-                    'route'       => 'admin.drivers.index',
+                    'route'       => 'admin.report.sales.purchases',
                     'icon'        => 'fas fa-fw fa-hand-holding-usd',
-                    'can'         => 'admin.drivers.index',
-                    'active'      => ['admin/drivers*']
+                    'can'         => 'admin.report.sales.purchases',
+                    'active'      => ['admin/report/sales_purchases*']
                 ],
                 [
                     'text' => 'Earnings',
-                    'route'  => 'admin.zipcodes.index',
+                    'route'  => 'admin.report.sales.earnings',
                     'icon' => 'fas fa-fw fa-chart-line',
-                    'can'         => 'admin.zipcodes.index',
-                    'active'      => ['admin/zipcodes*']
+                    'can'         => 'admin.report.sales.earnings',
+                    'active'      => ['admin/report/earnings*']
                 ],
 
             ],
@@ -296,6 +296,12 @@ return [
             'icon'    => 'fas fa-fw fa-shield-alt',
             'submenu' => [
                 [
+                    'text'        => 'My Profile',
+                    'route'       => 'profile.show',
+                    'icon'        => 'fas fa-fw fa-user',
+                    'active'      => ['user/profile*']
+                ],
+                [
                     'text'        => 'Users',
                     'route'       => 'admin.users.index',
                     'icon'        => 'fas fa-fw fa-users',
@@ -309,6 +315,8 @@ return [
                     'can'         => 'admin.roles.index',
                     'active'      => ['admin/roles*']
                 ],
+
+
 
             ],
 
@@ -397,12 +405,12 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@8',
+                    'location' => '//cdn.jsdelivr.net/npm/sweetalert2@11',
                 ],
             ],
         ],
