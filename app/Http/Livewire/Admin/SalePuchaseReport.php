@@ -54,7 +54,7 @@ class SalePuchaseReport extends Component
         ->leftJoin('zip_codes', 'file_details.zip_code', '=', 'zip_codes.code')
         ->whereBetween('work_date', [$this->date1, $this->date2])
         ->where('drivers.id', ($this->driver_id==0?'!=': '=') , $this->driver_id)
-
+        ->whereIn('file_details.active',[1,3])
         ->select(
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) )  as purchase") ,
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0) )  as sale"),
@@ -75,6 +75,7 @@ class SalePuchaseReport extends Component
         ->leftJoin('zip_codes', 'file_details.zip_code', '=', 'zip_codes.code')
         ->whereBetween('work_date', [$this->date1, $this->date2])
         ->where('drivers.id', ($this->driver_id==0?'!=': '=') , $this->driver_id)
+        ->whereIn('file_details.active',[1,3])
         ->orderBy('work_date','desc')
         ->orderBy('address', 'desc')
         ->orderBy('file_details.active', 'asc')
