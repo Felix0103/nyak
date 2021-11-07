@@ -80,8 +80,8 @@
                     <th scope="col">Driver Name</th>
                     <th scope="col">Address</th>
                     <th scope="col">Zip Code</th>
-                    <th scope="col">Sale Price</th>
                     <th scope="col">Purchase Price</th>
+                    <th scope="col">Sale Price</th>
                     <th scope="col">Earning</th>
                     </tr>
                 </thead>

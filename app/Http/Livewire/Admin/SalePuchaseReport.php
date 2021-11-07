@@ -58,8 +58,8 @@ class SalePuchaseReport extends Component
         ->select(
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) )  as purchase") ,
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0) )  as sale"),
-        DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0) -
-                  ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) )  as earning"),
+        DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) -
+                        ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0)  )  as earning"),
                   DB::raw(" count(*) as entries")
         )
         ->first();
@@ -82,8 +82,8 @@ class SalePuchaseReport extends Component
         ->select('file_headers.work_date' , 'file_details.*' ,DB::raw("concat(first_name,' ', last_name ) as driver_name"),
         DB::raw(" ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0)   as purchase") ,
         DB::raw(" ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0)   as sale"),
-        DB::raw(" ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0) -
-                  ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0)   as earning")
+        DB::raw(" ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) -
+                  ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0)   as earning")
         )
         ->get();
 
