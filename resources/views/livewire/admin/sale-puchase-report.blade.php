@@ -6,7 +6,7 @@
             <div class="col-sm-4">
                 <div class="form-group">
                         {!! Form::label('driverId', 'Start Date') !!}
-                        {!! Form::select('driverId', $drivers, null, ['class' => 'form-control', 'placeholder' => 'All Drivers', 'wire:model'=>'date1']) !!}
+                        {!! Form::select('driverId', $drivers, null, ['class' => 'form-control', 'placeholder' => 'All Drivers', 'wire:model'=>'driver_id']) !!}
                     @error('driverId')
                         <span class="text-danger">{{ $message }}</span>
                     @enderror
