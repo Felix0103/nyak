@@ -8,13 +8,6 @@
                  <table class="table table-striped">
                      <thead>
                          <tr>
-                             <th wire:click="order('id')" class="pointer">
-                                 ID
-                                 @if ($sort == 'id')
-                                 <i class="fas fa-sort-alpha-{{$direction=="desc"?"down":"up"}}-alt float-right mt-1"></i>
-                                 @endif
-                                 <i class="fas fa-sort float-right mt-1"></i>
-                             </th>
 
                              <th wire:click="order('code')"  >
                                  Code
@@ -57,7 +50,7 @@
                      <tbody>
                          @foreach ($zip_codes as $zipCode)
                              <tr>
-                                 <td >{{$zipCode->id}}</td>
+
                                  <td >{{$zipCode->code}}</td>
                                  <td >{{$zipCode->city}}</td>
                                  <td >{{$zipCode->description}}</td>
