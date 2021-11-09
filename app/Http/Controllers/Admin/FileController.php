@@ -70,6 +70,13 @@ class FileController extends Controller
 
 
             DB::commit();
+
+            DB::unprepared("
+                update file_details a
+                left join zip_codes b on a.address like CONCAT('%', b.city,'%')
+                set a.zip_code = b.code
+                where a.file_header_id={$fileHeader->id} and b.id is not null
+            ");
             DB::unprepared("
                 update file_details a
                 left join file_details b on a.barcode=b.barcode and a.file_header_id<>b.file_header_id and b.active in(1,3)
@@ -77,20 +84,14 @@ class FileController extends Controller
                 where a.file_header_id={$fileHeader->id} and b.id is not null
             ");
             DB::unprepared("
-                update file_details
-                set active =3
-                where file_header_id={$fileHeader->id}
-                and id not in (select min(id) from `file_details`  where file_header_id={$fileHeader->id} and active =1 group by address having count(*) >1 )
-                and address in (select address from `file_details`  where file_header_id={$fileHeader->id} and active =1 group by address having count(*) >1 )
-                and active =1
+                update file_details set active =3
+                where id in
+                (select * from (select id from file_details
+                where file_header_id={$fileHeader->id} and id not in (select min(a.id) from `file_details` as a where a.file_header_id={$fileHeader->id} and a.active =1 group by a.address having count(*) >1 )
+                and address in (select b.address from `file_details` as b where b.file_header_id={$fileHeader->id} and b.active =1 group by b.address having count(*) >1 ) and active =1 ) as J )
 
             ");
-            DB::unprepared("
-                update file_details a
-                left join zip_codes b on a.address like CONCAT('%', b.city,'%')
-                set a.zip_code = b.code
-                where a.file_header_id={$fileHeader->id} and b.id is not null
-            ");
+
             // Estatus 1--Esta Ok, 2--Esta dos veces la misma entrada, 3--Pago por duplicidad, 4-Procesado
 
             return redirect()->route('admin.files.edit',$fileHeader)->with('info', 'This files has been loaded successfully');
