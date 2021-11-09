@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-4">
         <div class="form-group">
             {!! Form::label('state_id', 'State') !!}
             {!! Form::select('state_id', $states, null, ['class' => 'form-control', 'placeholder' => 'Select a State'])
@@ -9,7 +9,19 @@
             @enderror
         </div>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-4">
+        <div class="form-group">
+            {!! Form::label('city', 'City') !!}
+
+            {!! Form::text('city', null, ['class' => 'form-control', 'placeholder' => 'Type some city']) !!}
+
+            @error('city')
+            <span class="text-danger">{{ $message }}</span>
+            @enderror
+        </div>
+
+    </div>
+    <div class="col-sm-4">
         <div class="form-group">
             {!! Form::label('code', 'Zip Code') !!}
             {!! Form::text('code', null, ['class' => 'form-control', 'placeholder' => 'Type the zip code']) !!}
@@ -78,4 +90,5 @@
         </div>
 
     </div>
+
 </div>

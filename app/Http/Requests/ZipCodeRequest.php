@@ -27,6 +27,8 @@ class ZipCodeRequest extends FormRequest
             'sale_price' => 'required|numeric|min:0',
             'purchase_price_duplicate' => 'required|numeric',
             'sale_price_duplicate' => 'required|numeric',
+            'city' => "required|unique:zip_codes,city,$zipcode?->id",
+
         ];
 
         return $rules;

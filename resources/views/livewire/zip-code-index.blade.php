@@ -23,6 +23,13 @@
                                  @endif
                                  <i class="fas fa-sort float-right mt-1"></i>
                              </th>
+                             <th wire:click="order('city')"  >
+                                City
+                                @if ($sort == 'city')
+                                <i class="fas fa-sort-alpha-{{$direction=="desc"?"down":"up"}}-alt float-right mt-1"></i>
+                                @endif
+                                <i class="fas fa-sort float-right mt-1"></i>
+                            </th>
                              <th wire:click="order('description')"  >
                                 Description
                                 @if ($sort == 'description')
@@ -52,6 +59,7 @@
                              <tr>
                                  <td >{{$zipCode->id}}</td>
                                  <td >{{$zipCode->code}}</td>
+                                 <td >{{$zipCode->city}}</td>
                                  <td >{{$zipCode->description}}</td>
                                  <td >{{$zipCode->purchase_price}}</td>
                                  <td >{{$zipCode->sale_price}}</td>

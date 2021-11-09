@@ -24,7 +24,6 @@ class FileDetails extends Component
     }
 
 
-
     public function updatingAddress(){
         $this->resetPage();
     }
@@ -48,6 +47,8 @@ class FileDetails extends Component
     }
     public function allZipCode(){
         $this->onlywithOutZipCode = !$this->onlywithOutZipCode;
+        $this->resetPage();
+
     }
     public function order($sort){
 
