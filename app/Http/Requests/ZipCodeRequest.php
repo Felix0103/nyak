@@ -22,7 +22,7 @@ class ZipCodeRequest extends FormRequest
 
         $rules = [
             'state_id' => 'required',
-            'code' => "required|unique:zip_codes,code,$zipcode?->id",
+            'code' => "required",
             'purchase_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|min:0',
             'purchase_price_duplicate' => 'required|numeric',
