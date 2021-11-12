@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\Admin\FileDetail;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -62,5 +63,19 @@ class FileDetails extends Component
             $this->sort =$sort;
             $this->direction ='asc';
         }
+    }
+
+    public function assignZipCode(){
+
+        DB::unprepared("
+        update file_details a
+        left join zip_codes b on a.address like CONCAT('%', b.city,'%')
+        set a.zip_code = b.code
+        where a.file_header_id={$this->fileId} and b.id is not null
+        ");
+        $this->allZipCode();
+
+        session()->flash('message', "The Zip Code has been assigned successfully");
+
     }
 }

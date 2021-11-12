@@ -1,4 +1,22 @@
 <div>
+    <div>
+        @if (session()->has('message') )
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+        @if (session()->has('message_error'))
+            <div class="alert alert-danger">
+                {{ session('message_error') }}
+            </div>
+        @endif
+    </div>
+    <div wire:loading wire:target="proccess" class="row justify-content-center items-align-center">
+        <p class="display-4"><span class="badge badge-success">Processing Report...</span></p>
+    </div>
+    <div wire:loading wire:target="assignZipCode" class="row justify-content-center items-align-center">
+        <p class="display-4"><span class="badge badge-success">Assining Zip Code...</span></p>
+    </div>
     <div class="card small">
         <div class="card-header">
             <div class="row">
@@ -9,14 +27,18 @@
                 </div>
                 <div class="col-sm-2">
                     <div class="custom-control">
-                        <button wire:click="allZipCode" class="btn btn-{{($onlywithOutZipCode?'success':'danger')}}">{{($onlywithOutZipCode?'All':'Missing Code')}}</button>
+                        <button wire:click="allZipCode" class="btn btn-{{($onlywithOutZipCode?'success':'danger')}} btn-sm">{{($onlywithOutZipCode?'All':'Missing Code')}}</button>
+                        @if ($onlywithOutZipCode && $fileDetails->count()>0)
+                            <button wire:click="assignZipCode" class="btn btn-primary btn-sm">Auto assign code</button>
+                        @endif
+
                     </div>
                 </div>
             </div>
         </div>
         @if ($fileDetails->count())
         @csrf
-             <div class="card-body">
+             <div class="card-body" wire:loading.remove>
                  <table class="table table-striped">
                      <thead>
                          <tr>
@@ -76,11 +98,11 @@
                      </tbody>
                      </table>
              </div>
-             <div class="card-footer">
+             <div class="card-footer" wire:loading.remove>
                  {{$fileDetails->links()}}
              </div>
         @else
-              <div class="card-body">
+              <div class="card-body" wire:loading.remove>
                   <strong>This file does not have any delivery</strong>
               </div>
         @endif

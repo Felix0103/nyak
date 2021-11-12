@@ -16,6 +16,10 @@ class FileHeader extends Model
         return $this->hasMany(FileDetail::class);
     }
 
+    public function proccessed_report_details(){
+        return $this->hasMany(ProccessedReportDetail::class);
+    }
+
     public function fileStatus(){
 
         $result = $this->file_details;
@@ -23,20 +27,24 @@ class FileHeader extends Model
         if($result->count()==0){
             return 'no deliveries';
         }
-        else if ($result->where('active',1)->count() == $total  ) //All ready
+        else if ($result->where('processed', 1)->count() == $total  ) //All ready
         {
-            if($result->where(DB::raw("len(zip_code)") ,'<',0)->count() < $total ){
-                return 'zip code missing';
-            }
+           return 'Processed and waiting for Pay';
+        }
+        else if ($result->where('processed', 2)->count() == $total  ) //All ready
+        {
+           return 'Paid Out';
+        }
+        else if ($result->where(DB::raw("lenght(zip_code)") ,'=',0)->count()  ) //All ready
+        {
+            return 'zip code missing';
+
         }
         else if ($result->where('active',2)->count() == $total  ) //All ready
         {
            return 'duplicate file';
         }
-        else if ($result->where('active',4)->count() == $total  ) //All ready
-        {
-           return 'Paid Out';
-        }
+
 
         return 'Ready to pay';
     }

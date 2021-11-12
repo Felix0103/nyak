@@ -3,9 +3,13 @@
 namespace App\Http\Livewire\Admin;
 
 use App\Models\Admin\Driver;
+use App\Models\Admin\FileDetail;
 use App\Models\Admin\FileHeader;
+use App\Models\Admin\ProccessedReport;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\PseudoTypes\True_;
 
 class SalePuchaseReport extends Component
 {
@@ -25,7 +29,7 @@ class SalePuchaseReport extends Component
         $this->date1 = date('Y-m-d');
         $this->date2 = date('Y-m-d');
         $this->driver_id =0;
-        $this->search =0;
+        $this->search;
 
     }
 
@@ -44,6 +48,67 @@ class SalePuchaseReport extends Component
 
     public function search(){
         $this->search =1;
+    }
+
+    public function proccess(){
+
+        $totales= FileHeader::leftJoin('file_details','file_headers.id', '=', 'file_details.file_header_id')
+        ->leftJoin('drivers', 'file_headers.driver_id', '=', 'drivers.id')
+        ->leftJoin('zip_codes', 'file_details.zip_code', '=', 'zip_codes.code')
+        ->whereBetween('work_date', [$this->date1, $this->date2])
+        ->where('drivers.id', ($this->driver_id==0?'!=': '=') , $this->driver_id)
+        ->whereIn('file_details.active',[1,3])
+        ->select(
+            DB::raw(" sum( case when length(file_details.zip_code) =0 then 1 else 0 end ) as missing_code") ,
+            DB::raw(" sum( case when length(file_details.zip_code) >0 and zip_codes.id is null then 1 else 0 end ) as no_created") ,
+            DB::raw(" count(*) as entries")
+        )
+        ->first();
+
+        $message ="";
+        if($totales->missing_code >0)
+        {
+            $message  = "$totales->missing_code unassigned zip code missing";
+        }
+        if($totales->no_created >0)
+        {
+            $message  .= (strlen( $message ) > 0?" and ":"")."you have $totales->no_created  zip code without creating";
+        }
+
+        if(strlen( $message ) > 0){
+            session()->flash('message_error', $message);
+            // return;
+        }
+
+        $toProccess = FileHeader::leftJoin('file_details','file_headers.id', '=', 'file_details.file_header_id')
+        ->leftJoin('drivers', 'file_headers.driver_id', '=', 'drivers.id')
+        ->leftJoin('zip_codes', 'file_details.zip_code', '=', 'zip_codes.code')
+        ->whereBetween('work_date', [$this->date1, $this->date2])
+        ->where('drivers.id', ($this->driver_id==0?'!=': '=') , $this->driver_id)
+        ->whereIn('file_details.active',[1,3])
+        ->orderBy('work_date','desc')
+        ->orderBy('address', 'desc')
+        ->orderBy('file_details.active', 'asc')
+        ->select('file_details.id')
+        ->pluck('id');
+
+        FileDetail::whereIn('id', $toProccess->toArray())
+        ->update(['processed' => 1]);
+
+        $processed = ProccessedReport::create([
+            'user_id' => Auth::id(),
+            'start_date' => $this->date1,
+            'end_date' => $this->date2,
+            'driver_id' => $this->driver_id,
+            'active' => 1
+        ]);
+        $headers = FileDetail::whereIn('id', $toProccess->toArray())
+        ->select('file_header_id',  DB::raw(" 1 as active") )
+        ->groupByRaw('file_header_id')
+        ->get();
+
+        $processed->proccessed_report_details()->createMany($headers->toArray());
+        session()->flash('message', "Report processed successfully");
     }
 
     private function report(){

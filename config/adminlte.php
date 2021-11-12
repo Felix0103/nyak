@@ -264,6 +264,13 @@ return [
                     'can'         => 'admin.report.sales.earnings',
                     'active'      => ['admin/report/earnings*']
                 ],
+                [
+                    'text' => 'Processed',
+                    'route'  => 'admin.report.sales.proccessed',
+                    'icon' => 'fas fa-fw fa-tasks',
+                    'can'         => 'admin.report.sales.proccessed',
+                    'active'      => ['admin/report/proccessed*']
+                ],
 
             ],
 

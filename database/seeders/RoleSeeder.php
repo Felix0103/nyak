@@ -48,6 +48,8 @@ class RoleSeeder extends Seeder
         //Reports
         Permission::create(['name' => 'admin.report.sales.purchases','description' =>'See sales and purchase report' ])->syncRoles([$admin]);
         Permission::create(['name' => 'admin.report.sales.earnings','description' =>'See earnings report' ])->syncRoles([$admin]);
+        Permission::create(['name' => 'admin.report.sales.proccessed','description' =>'See proccessed reports' ])->syncRoles([$admin]);
+
 
     }
 }

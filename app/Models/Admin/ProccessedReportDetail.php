@@ -5,12 +5,14 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class FileDetail extends Model
+class ProccessedReportDetail extends Model
 {
     use HasFactory;
-    protected $fillable =[ 'file_header_id','barcode','status','name','address','seq_no','zip_code','active', 'processed'];
+    public $timestamps = false;
+    protected $fillable = ['proccessed_report_id', 'file_header_id','active'];
 
     public function file_header(){
+
         return $this->belongsTo(FileHeader::class);
     }
 }

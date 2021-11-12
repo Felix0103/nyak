@@ -13,4 +13,8 @@ class HomeController extends Controller
 
         return view('admin.index');
     }
+
+    public function returns(){
+        return back();
+    }
 }

@@ -46,11 +46,14 @@
                                  <td >{{$file->file_name}}</td>
                                  <td >{{$file->fileStatus()}}</td>
                                  <td width="10px">
+
                                      @if ($file->fileStatus()=="duplicate file")
                                          <div><h6 class="badge badge-danger">Duplicate</h6></div>
                                     @elseif ($file->fileStatus()=="no deliveries")
                                         <div><h6 class="badge badge-warning">No Deliveries</h6></div>
-                                     @else
+                                    @elseif ($file->fileStatus()=='Processed and waiting for Pay' || $file->fileStatus()=='Paid Out')
+                                        <div><h6 class="badge badge-success">{{$file->fileStatus()}}</h6></div>
+                                    @else
                                         @can('admin.files.edit')
                                             <a class="btn btn-primary btn-sm" href="{{route('admin.files.edit', $file->id)}}">Edit</a>
                                         @endcan
@@ -59,7 +62,10 @@
                                  </td>
                                  <td width="10px">
                                     @can('admin.files.destroy')
-                                        <button onclick="delete_file({{$file->id}})" class="btn btn-{{($file->active==0?'success':'danger')}} btn-sm">{{($file->active==1?'Cancel':'Active')}}</button>
+                                        @if ($file->fileStatus()!='Processed and waiting for Pay' && $file->fileStatus()!='Paid Out' )
+                                            <button onclick="delete_file({{$file->id}})" class="btn btn-{{($file->active==0?'success':'danger')}} btn-sm">{{($file->active==1?'Cancel':'Active')}}</button>
+
+                                        @endif
                                     @endcan
                                 </td>
                              </tr>
