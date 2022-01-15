@@ -44,15 +44,14 @@ class ReportController extends Controller
         $totales= FileHeader::leftJoin('file_details','file_headers.id', '=', 'file_details.file_header_id')
         ->leftJoin('drivers', 'file_headers.driver_id', '=', 'drivers.id')
         ->leftJoin('zip_codes', 'file_details.zip_code', '=', 'zip_codes.code')
+
         ->whereIn('file_headers.id',$processedreport->proccessed_report_details()->select('id')->pluck('id')->toArray())
         ->select(
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) )  as purchase") ,
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0) )  as sale"),
         DB::raw(" sum(ifnull(case when file_details.active=1 then zip_codes.purchase_price else zip_codes.purchase_price_duplicate end,0) -
                         ifnull(case when file_details.active=1 then zip_codes.sale_price else zip_codes.sale_price_duplicate end,0)  )  as earning"),
-                  DB::raw(" count(*) as entries"),
-                  DB::raw(" min(star_date) as start_date").
-                  DB::raw(" max(end_date) as end_date")
+                  DB::raw(" count(*) as entries")
 
         )
         ->first();

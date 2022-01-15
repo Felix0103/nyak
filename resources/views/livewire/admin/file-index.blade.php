@@ -61,13 +61,22 @@
 
                                  </td>
                                  <td width="10px">
-                                    @can('admin.files.destroy')
+                                    @can('admin.files.destroy-test')
                                         @if ($file->fileStatus()!='Processed and waiting for Pay' && $file->fileStatus()!='Paid Out' )
                                             <button onclick="delete_file({{$file->id}})" class="btn btn-{{($file->active==0?'success':'danger')}} btn-sm">{{($file->active==1?'Cancel':'Active')}}</button>
 
                                         @endif
                                     @endcan
                                 </td>
+                                <td width="10px">
+                                    @can('admin.files.destroy')
+                                        @if ($file->fileStatus()!='Processed and waiting for Pay' && $file->fileStatus()!='Paid Out' )
+                                            <button onclick="drop_file({{$file->id}})" class="btn btn-danger btn-sm">Delete</button>
+
+                                        @endif
+                                    @endcan
+                                </td>
+
                              </tr>
                          @endforeach
                      </tbody>
@@ -127,6 +136,44 @@
         }
         })
      }
+     function drop_file(file_id){
+
+        Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+        if (result.isConfirmed) {
+
+
+            fetch('/admin/files/drop_file/'+file_id, {
+                method: 'DELETE',
+                headers: {
+                'Content-Type': 'application/json'
+                },
+                body: '{"_token": "'+$('[name="_token"]').val()+'"}'
+            })
+            .then(response => {
+
+                $('#file_'+file_id).hide();
+                Swal.fire(
+                'Deleted!',
+                'Your file has been deleted.',
+                'success'
+                )
+                // return response.json( )
+            })
+
+
+
+
+        }
+        })
+        }
  </script>
 
 

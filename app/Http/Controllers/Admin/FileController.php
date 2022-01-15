@@ -160,5 +160,12 @@ class FileController extends Controller
         return $fileheader;
     }
 
+    public function drop_file($id){
+        $fileheader = FileHeader::findOrFail($id);
+        $fileheader->file_details()->delete();
+        $fileheader->delete();
+        return $fileheader;
+    }
+
 
 }

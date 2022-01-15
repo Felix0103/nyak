@@ -22,25 +22,25 @@ class FileHeader extends Model
 
     public function fileStatus(){
 
-        $result = $this->file_details;
-        $total =$result->count();
-        if($result->count()==0){
+        $total =$this->file_details()->count();
+        if($total==0){
             return 'no deliveries';
         }
-        else if ($result->where('processed', 1)->count() == $total  ) //All ready
+        else if ($this->file_details()->where('processed', 1)->count() == $total  ) //All ready
         {
            return 'Processed and waiting for Pay';
         }
-        else if ($result->where('processed', 2)->count() == $total  ) //All ready
+        else if ($this->file_details()->where('processed', 2)->count() == $total  ) //All ready
         {
            return 'Paid Out';
         }
-        else if ($result->where(DB::raw("lenght(zip_code)") ,'=',0)->count()  ) //All ready
+        else if ($this->file_details()->where(DB::raw("length(zip_code)") ,'=',0)->count() >0  ) //All ready
         {
-            return 'zip code missing';
+            return 'zip code missing' ;
+         
 
         }
-        else if ($result->where('active',2)->count() == $total  ) //All ready
+        else if ($this->file_details()->where('active',2)->count() == $total  ) //All ready
         {
            return 'duplicate file';
         }

@@ -27,3 +27,4 @@ Route::get('report/processed/print/{processedreport}', [ReportController::class,
 Route::put('report/processed/payout/{id}',[ReportController::class,'payout'] )->name('admin.report.sales.proccessed.payout');
 
 Route::put('file/update_zip_code/{filedetail}', [FileDetailController::class,'updateZipCode'])->name('admin.file.update.zipcode');
+Route::delete('files/drop_file/{id}', [FileController::class,'drop_file'])->name('admin.files.drop_file');
