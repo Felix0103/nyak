@@ -37,7 +37,7 @@ class FileHeader extends Model
         else if ($this->file_details()->where(DB::raw("length(zip_code)") ,'=',0)->count() >0  ) //All ready
         {
             return 'zip code missing' ;
-         
+
 
         }
         else if ($this->file_details()->where('active',2)->count() == $total  ) //All ready
